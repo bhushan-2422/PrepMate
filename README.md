@@ -34,3 +34,95 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+
+
+
+import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import Formfield from "./Formfield";
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+});
+
+const InterviewForm = () => {
+  // 1. Define your form.
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      jobTitle: "",
+      description:"",
+      duration:"",
+      type:""
+    },
+  });
+
+  // 2. Define a submit handler.
+  function onSubmit(values) {
+    console.log(values); // ✅ Validated values
+  }
+  return (
+  <div>
+    <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {!isSignIn && (
+              <Formfield
+                control={form.control}
+                name="jobTitle"
+                label="jobTitle"
+                placeholder="e.g. fullstack developer"
+                type="text"
+              />
+            )}
+            <Formfield
+              control={form.control}
+              name="description"
+              label="description"
+              placeholder="Job description"
+              type="text"
+            />
+            <Formfield
+              control={form.control}
+              name="duration"
+              label="duration"
+              type=""
+            />
+
+            <Button className="btn-primary" type="submit">
+              {isSignIn ? "Sign In" : "Create an account"}
+            </Button>
+
+            <div>
+              {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
+              <Link
+                href={!isSignIn ? "/signin" : "/signup"}
+                className="font-bold"
+              >
+                {isSignIn ? "Sign Up" : "Sign In"}
+              </Link>
+            </div>
+          </form>
+        </Form>
+
+  </div>
+)
+};
+
+export default InterviewForm;

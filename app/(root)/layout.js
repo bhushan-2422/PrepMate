@@ -12,10 +12,14 @@ const rootLayout =async ({ children }) => {
   if(!isUserAuthenticated) redirect('/signin'); //<-----check here after developement this prevents from going to home page
 
   return (
-    <div className=" w-screen">
-      <Navbar/>
+    <>
+    <Navbar/>
+    <div className=" w-screen flex flex-col my-4 h-max">
+      
       {children}
     </div>
+    </>
+    
   );
 };
 

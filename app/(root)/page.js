@@ -1,6 +1,7 @@
 import React from "react";
 import Cards from "@/components/Cards";
 import { dummyInterviews } from "@/constants";
+import Link from "next/link";
 
 const page = () => {
   return (
@@ -16,8 +17,8 @@ const page = () => {
               Practice job interviews with an AI voice agent that gives
               real-time feedback to boost your confidence.
             </p>
-            <a
-              href="#"
+            <Link
+               href="/Create-interview"
               className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
             >
               Get started
@@ -33,9 +34,9 @@ const page = () => {
                   clipRule="evenodd"
                 ></path>
               </svg>
-            </a>
+            </Link>
             <a
-              href="#"
+              href="/Create-interview"
               className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
             >
               Speak to Sales

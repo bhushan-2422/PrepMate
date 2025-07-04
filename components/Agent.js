@@ -1,5 +1,9 @@
+"use client";
+import { cn } from "@/lib/utils";
+import { vapi } from "@/lib/vapi.sdk";
 import Image from "next/image";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect , useState} from "react";
 
 const CallStatus = {
   INACTIVE: "INACTIVE",
@@ -8,14 +12,18 @@ const CallStatus = {
   FINISHED: "FINISHED",
 };
 
-const Agent = ({ userName }) => {
-  const callStatus = CallStatus.ACTIVE;
-  const isSpeaking = true;
+const Agent = ({ userName, userId, type }) => {
+  const router = useRouter();
+  const [isSpeaking, setisSpeaking] = useState(false);
+  const [callStatus, setcallStatus] = useState(CallStatus.INACTIVE);
+  const [messages, setmessages] = useState([]);
+  const lastMessage = "hello boys"
+  const isCallInactiveOrFinished = true;
 
-  const messages = ["Whats your name", "my name is bhushan"];
-  const lastMessage = messages[messages.length - 1];
+
+
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div className="call-view">
         <div className="card-interviewer">
           <div className="avatar">
@@ -61,11 +69,11 @@ const Agent = ({ userName }) => {
             <span
               className={cn(
                 "absolute animate-ping rounded-full opacity-75",
-                (callStatus !== "CONNECTING") & "hidden"
+                (callStatus !== "CONNECTING") && "hidden"
               )}
             />
             <span>
-              {callStatus === "INACTIVE" || callStatus === "FINISHED"
+              {isCallInactiveOrFinished
                 ? "Call"
                 : "..."}
             </span>
@@ -74,7 +82,7 @@ const Agent = ({ userName }) => {
           <button className="btn-disconnect">End</button>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

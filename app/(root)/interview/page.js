@@ -1,15 +1,14 @@
-import Agent from "@/components/Agent";
-import React from "react";
+import Agent from '@/components/Agent'
+import React from 'react'
 
-const page = () => {
+const page = async () => {
+  const user = await getCurrentUser();
+
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-full flex flex-col gap-3 sm:w-3/4">
-        <h3>Interview Generation</h3>
-        <Agent username="you" userId="user1" type="generate" />
-      </div>
+    <div className='w-full sm:w-3/4'>    
+      <Agent/>
     </div>
-  );
-};
+  )
+}
 
-export default page;
+export default page
