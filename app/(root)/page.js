@@ -2,8 +2,32 @@ import React from "react";
 import Cards from "@/components/Cards";
 import { dummyInterviews } from "@/constants";
 import Link from "next/link";
+import {
+  getCurrentUser,
+  getInterviewByUserId,
+  getLatestInterviews,
+} from "@/lib/actions/auth.action";
 
-const page = () => {
+const page = async () => {
+  const user = await getCurrentUser();
+  console.log(user)
+
+if (!user) {
+  return <div>User not found. Please login.</div>;
+}
+
+  //by calling both getinterview functions it will cause problem so we will do parallel calling 
+  //this does fast request
+
+  const [userInterviews, LatestInterviews]= await Promise.all([
+    getInterviewByUserId(user?.id),
+    getLatestInterviews({userId: user?.id})
+
+
+  ])
+  
+  const haspastInterviews = userInterviews?.length > 0;
+  const hasUpcomingInterviews = LatestInterviews?.length > 0;
   return (
     <div className="dark flex flex-col items-center w-screen">
       <section className="">
@@ -18,7 +42,7 @@ const page = () => {
               real-time feedback to boost your confidence.
             </p>
             <Link
-               href="/Create-interview"
+              href="/Create-interview"
               className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
             >
               Get started
@@ -43,28 +67,34 @@ const page = () => {
             </a>
           </div>
           <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-            <img
-              src="/robot.png"
-              alt="mockup"
-            />
+            <img src="/robot.png" alt="mockup" />
           </div>
         </div>
       </section>
-      <div className="mx-2 sm:mx-20 p-2 w-3/4 flex flex-col gap-4">
+      <div className="w-full flex justify-center">
+        <div className="p-2 w-3/4 flex flex-col gap-4">
         <h3>Your Interviews</h3>
-        <div className="flex gap-4 max-w-[560px] flex-col sm:flex-row">
-          {dummyInterviews.map((interviews)=>(
-            <Cards {...interviews} key={interviews.id}/>
-          ))}
-          
+        <div className="flex gap-4 w-full flex-wrap justify-center">
+
+          {haspastInterviews ? (
+            userInterviews?.map((interviews) => (
+              <Cards {...interviews} key={interviews.id} />
+            ))
+          ) : (
+            <p>You haven&apos; taken any Interview</p>
+          )}
         </div>
         <h3>Other Interviews</h3>
-        <div className="flex gap-4 max-w-[560px] flex-col sm:flex-row">
-          {dummyInterviews.map((interviews)=>(
-            <Cards {...interviews} key={interviews.id}/>
-          ))}
-
+        <div className="flex gap-4 w-full flex-wrap">
+          {hasUpcomingInterviews ? (
+            LatestInterviews?.map((interviews) => (
+              <Cards {...interviews} key={interviews.id} />
+            ))
+          ) : (
+            <p>There are no new Interview available</p>
+          )}
         </div>
+      </div>
       </div>
     </div>
   );

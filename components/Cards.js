@@ -4,16 +4,24 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
 import { getRandomInterviewCover } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const Cards = ({ interviewId, userId, role, type, techstack }) => {
   const feedback = null;
-  const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
+  const mixed = type?.length > 1;
   return (
-    <div className="card-border w-{360px} max-sm:w-full min-h-92 h-[100]">
+    <div className="card-border w-{360px} w-full lg:w-[260px]">
       <div className="card-interview p-3">
         <div className="flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-green-900">
-            <p>{normalizedType}</p>
+            <p>{mixed? "mixed": type}</p>
           </div>
           <Image
             src={getRandomInterviewCover()}
@@ -35,9 +43,9 @@ const Cards = ({ interviewId, userId, role, type, techstack }) => {
               : "you havent taken this interview yet! Take it now to improve your confidence"}
           </p>
 
-          <div className="tech-icons flex justify-between">
+          <div className="tech-icons flex justify-between mt-4">
 
-            <DisplayTechIcons techstack={techstack}/>
+            {/* <DisplayTechIcons techstack={techstack}/> */}
             <Button className="btn-primary">
               <Link
                 href={
