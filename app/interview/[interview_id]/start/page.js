@@ -13,7 +13,7 @@ const StartInterview = () => {
   const [isSpeaking, setisSpeaking] = useState(true);
   const { interviewInfo, setinterviewInfo } = useContext(InterviewDataContext);
   const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN);
-  const [activeUser, setactiveUser] = useState(false)
+  const [activeUser, setactiveUser] = useState(false);
 
   useEffect(() => {
     startCall();
@@ -26,40 +26,50 @@ const StartInterview = () => {
     );
 
     const assistantOptions = {
-      name: "AI Recruiter",
-
+      name: "Interviewer",
       firstMessage:
-        "Hi "+ interviewInfo?.username+", how are you? Ready for your interview on "+interviewInfo?.interviewData?.role +"?",
-
+        "Hi " +
+        interviewInfo?.username +
+        ", how are you? Ready for your interview on " +
+        interviewInfo?.interviewData?.role +
+        "?",
       transcriber: {
         provider: "deepgram",
         model: "nova-2",
-        language: "en-US",
+        language: "en",
       },
-
       voice: {
-        provider: "playht",
-        voiceId: "jennifer",
+        provider: "11labs",
+        voiceId: "sarah",
+        stability: 0.4,
+        similarityBoost: 0.8,
+        speed: 0.9,
+        style: 0.5,
+        useSpeakerBoost: true,
       },
-
       model: {
         provider: "openai",
         model: "gpt-4",
         messages: [
           {
             role: "system",
-            content: `
+            content:
+              `
 You are an AI voice assistant conducting interviews.
 Your job is to ask candidates the provided interview questions and assess their responses.
 
 Begin the conversation with a friendly introduction, setting a relaxed yet professional tone.
-Example: "Hey there! Welcome to your `+interviewInfo?.interviewData?.role +` interview. Let's get started with a few questions!"
+Example: "Hey there! Welcome to your ` +
+              interviewInfo?.interviewData?.role +
+              ` interview. Let's get started with a few questions!"
 
 Ask one question at a time and wait for the candidate's response before proceeding.
 Keep the questions clear and concise.
 
 Below are the questions. Ask one by one:
-Questions: `+questionList+`
+Questions: ` +
+              questionList +
+              `
 
 If the candidate struggles, offer hints or rephrase the question without giving away the answer.
 Example: "Need a hint? Think about how React tracks component updates!"
@@ -83,38 +93,37 @@ Key Guidelines:
 - Keep responses short and natural, like a real conversation
 - Adapt based on the candidate's confidence level
 - Ensure the interview remains focused on React
-        `.trim(),
+        `,
           },
         ],
       },
     };
 
-    vapi.start(assistantOptions)
+    vapi.start(assistantOptions);
   };
 
-  const stopInterview=()=>{
-    vapi.stop()
-  }
+  const stopInterview = () => {
+    vapi.stop();
+  };
 
-  vapi.on("call-start",()=>{
+  vapi.on("call-start", () => {
     console.log("call has started");
-    toast("call connected...")
-  })
-  vapi.on("speech-start",()=>{
-    cocnsole.log("assistant speech has started");
-    setactiveUser(false)
-  })
+    toast("call connected...");
+  });
+  vapi.on("speech-start", () => {
+    console.log("assistant speech has started");
+    setactiveUser(false);
+  });
 
-  vapi.on("speech-end",()=>{
+  vapi.on("speech-end", () => {
     console.log("assistant speech has ended");
     setactiveUser(true);
-  })
+  });
 
-  vapi.on("call-end",()=>{
+  vapi.on("call-end", () => {
     console.log("call has ended");
-    toast('call has ended');
-  })
-
+    toast("call has ended");
+  });
 
   return (
     <div className="flex flex-col items-center gap-4 mt-8">
@@ -134,7 +143,7 @@ Key Guidelines:
               height={54}
               className="object-cover"
             />
-            {activeUser?"": <span className="animate-speak"></span>}
+            {activeUser ? "" : <span className="animate-speak"></span>}
           </div>
           <h3>AI Interviewer</h3>
         </div>
@@ -147,7 +156,7 @@ Key Guidelines:
               width={540}
               className="object-cover rounded-full size-[120px]"
             />
-            {activeUser?<span className="animate-speak"></span>:""}
+            {activeUser ? <span className="animate-speak"></span> : ""}
 
             <h3>{interviewInfo?.username}</h3>
           </div>
@@ -156,8 +165,8 @@ Key Guidelines:
 
       <div className="flex gap-4 mt-4">
         <Mic className="h-12 w-12 p-3 rounded-full bg-slate-700 cursor-pointer hover:bg-slate-500" />
-        <AlertConfirm stopInterview={()=>stopInterview()}>
-        <Phone className="h-12 w-12 p-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" />
+        <AlertConfirm stopInterview={() => stopInterview()}>
+          <Phone className="h-12 w-12 p-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-400" />
         </AlertConfirm>
       </div>
     </div>
