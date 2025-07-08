@@ -11,17 +11,46 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { Calendar, Clock } from "lucide-react";
+import moment from "moment";
+import { getFeedbackByInterviewId } from "@/lib/actions/auth.action";
 
-const Cards = ({ interviewId, userId, role, type, techstack }) => {
-  const feedback = null;
+const Cards = async ({
+  interviewId,
+  userId,
+  role,
+  type,
+  techstack,
+  created_on,
+  duration,
+}) => {
+  const feedback =
+    userId && interviewId
+      ? await getFeedbackByInterviewId({ interview_id: interviewId, userId })
+      : null;
+
   const mixed = type?.length > 1;
+  const formattedDate = moment(created_on).format("DD MMM YYYY");
+
+  // Use optional chaining to avoid crash
+  const values = feedback?.feedback?.feedback?.rating;
+  const prescore = values
+    ? values.communication +
+      values.experience +
+      values.problemSolving +
+      values.technicalSkills
+    : 0;
+
+  const totalscore = values ? (prescore / 40) * 100 : null;
+  const finalassesment = feedback?.feedback?.feedback?.summary;
+
   return (
-    <div className="card-border w-{360px} w-full lg:w-[260px]">
+    <div className="card-border w-full lg:w-[260px]">
       <div className="card-interview p-3">
         <div className="flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-green-900">
-            <p>{mixed? "mixed": type}</p>
+            <p>{mixed ? "mixed" : type}</p>
           </div>
           <Image
             src={getRandomInterviewCover()}
@@ -31,29 +60,38 @@ const Cards = ({ interviewId, userId, role, type, techstack }) => {
             className="rounded-full object-fit size-[90px]"
           />
           <h3 className="mt-5 capitalize">{role} interview</h3>
-          <div className="flex gap-2">
-
-            <Image src="/star.svg" alt="score" width={20} height={20} />
-            
-            <p>{feedback ? totalscore : "---"}/100</p>
+          <div className="flex justify-between">
+            <div className="flex gap-2">
+              <Image src="/star.svg" alt="score" width={20} height={20} />
+              <p>{feedback ? totalscore : "---"}/100</p>
+            </div>
+            <div className="flex gap-2">
+              <Calendar />
+              <span>{formattedDate}</span>
+            </div>
           </div>
-          <p>
+          <div className="flex gap-2 items-center">
+            <Clock className="w-4 h-4" />
+            <span>{duration}</span>
+          </div>
+          <p className="mt-2 text-sm line-clamp-2">
             {feedback
               ? finalassesment
-              : "you havent taken this interview yet! Take it now to improve your confidence"}
+              : "You haven't taken this interview yet! Take it now to improve your confidence."}
           </p>
 
           <div className="tech-icons flex justify-between mt-4">
-
             {/* <DisplayTechIcons techstack={techstack}/> */}
-            <Button className="btn-primary">
+            <Button className={feedback? 'btn-primary':'btn-secondary'}>
               <Link
                 href={
                   feedback
                     ? `/interview/${interviewId}/feedback`
                     : `/interview/${interviewId}`
                 }
-              >{feedback?"check feedback":"Give an interview"}</Link>
+              >
+                {feedback ? "check feedback" : "Give an interview"}
+              </Link>
             </Button>
           </div>
         </div>

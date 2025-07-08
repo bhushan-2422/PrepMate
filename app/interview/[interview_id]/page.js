@@ -16,6 +16,7 @@ const Interview = () => {
   const [InterviewData, setInterviewData] = useState(null);
   const [username, setusername] = useState()
   const [loading, setloading] = useState(false)
+  const [useremail, setuseremail] = useState()
 
   const {interviewInfo, setinterviewInfo} = useContext(InterviewDataContext)
 
@@ -42,6 +43,7 @@ const onJoinInterview = () => {
   setloading(true)
   const newInfo = {
     username: username,
+    useremail:useremail,
     interviewData: InterviewData
   };
 
@@ -70,6 +72,10 @@ const onJoinInterview = () => {
         <div className="mt-4 w-full">
           <h4 className="font-bold">Enter your full name</h4>
           <Input placeholder="e.g. Tony Stark" onChange={(event)=>setusername(event.target.value)} />
+        </div>
+        <div className="mt-4 w-full">
+          <h4 className="font-bold">Enter your email</h4>
+          <Input type="email" placeholder="e.g. tony123@gmail.com" onChange={(event)=>setuseremail(event.target.value)} />
         </div>
         <div className="bg-slate-800 p-2 border rounded-lg mt-6 flex gap-2">
           <Info />

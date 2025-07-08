@@ -8,16 +8,36 @@ import { Mic, Phone, Timer } from "lucide-react";
 import Vapi from "@vapi-ai/web";
 import AlertConfirm from "./_components/AlertConfirm";
 import { toast } from "sonner";
+import axios from "axios";
+import { useParams, useRouter } from "next/navigation";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
 const StartInterview = () => {
+  const { interview_id } = useParams();
   const [isSpeaking, setisSpeaking] = useState(true);
   const { interviewInfo, setinterviewInfo } = useContext(InterviewDataContext);
   const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN);
   const [activeUser, setactiveUser] = useState(false);
+  const [conversation, setConversation] = useState();
+  const [userId, setuserId] = useState();
+  const router = useRouter();
 
   useEffect(() => {
     startCall();
   }, [interviewInfo]);
+
+  //access user
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getCurrentUser();
+      if (user?.id) {
+        setuserId(user.id)
+
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const startCall = () => {
     let questionList;
@@ -104,26 +124,63 @@ Key Guidelines:
 
   const stopInterview = () => {
     vapi.stop();
+    console.log("stop...");
+    generateFeedback();
   };
 
-  vapi.on("call-start", () => {
-    console.log("call has started");
-    toast("call connected...");
-  });
-  vapi.on("speech-start", () => {
-    console.log("assistant speech has started");
-    setactiveUser(false);
-  });
+  useEffect(() => {
+    const handleMessage = (message) => {
+      console.log("message:", message);
 
-  vapi.on("speech-end", () => {
-    console.log("assistant speech has ended");
-    setactiveUser(true);
-  });
+      if (message?.conversation) {
+        const convoString = JSON.stringify(message.conversation);
+        console.log("conversation string:", convoString);
+        setConversation(convoString);
+      }
+    };
 
-  vapi.on("call-end", () => {
-    console.log("call has ended");
-    toast("call has ended");
-  });
+    vapi.on("message", handleMessage);
+    vapi.on("call-start", () => {
+      console.log("call has started");
+      toast("call connected...");
+    });
+    vapi.on("speech-start", () => {
+      console.log("assistant speech has started");
+      setactiveUser(false);
+    });
+
+    vapi.on("speech-end", () => {
+      console.log("assistant speech has ended");
+      setactiveUser(true);
+    });
+
+    vapi.on("call-end", () => {
+      console.log("call has ended");
+      toast("call has ended");
+      generateFeedback();
+    });
+
+    return () => {
+      vapi.off("message", handleMessage);
+      vapi.off("call-start", () => console.log("end"));
+      vapi.off("speech-start", () => console.log("end"));
+      vapi.off("call-end", () => console.log("end"));
+      vapi.off("speech-end", () => console.log("end"));
+    };
+  }, []);
+
+  const generateFeedback = async () => {
+    const result = await axios.post("/api/ai-feedback", {
+      conversation: conversation,
+      username: interviewInfo?.username,
+      useremail: interviewInfo?.useremail,
+      interview_id: interview_id,
+      userId : userId
+    });
+
+    console.log("result:", result.data.feedbackData);
+    router.replace("/interview/" + interview_id + "/completed");
+  };
 
   return (
     <div className="flex flex-col items-center gap-4 mt-8">
@@ -156,7 +213,7 @@ Key Guidelines:
               width={540}
               className="object-cover rounded-full size-[120px]"
             />
-            {activeUser ? <span className="animate-speak"></span> : ""}
+            {activeUser && <span className="animate-speak"></span>}
 
             <h3>{interviewInfo?.username}</h3>
           </div>

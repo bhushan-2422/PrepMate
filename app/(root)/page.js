@@ -7,27 +7,30 @@ import {
   getInterviewByUserId,
   getLatestInterviews,
 } from "@/lib/actions/auth.action";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 const page = async () => {
   const user = await getCurrentUser();
-  console.log(user)
+  console.log(user);
 
-if (!user) {
-  return <div>User not found. Please login.</div>;
-}
+  if (!user) {
+    return <div>User not found. Please login.</div>;
+  }
 
-  //by calling both getinterview functions it will cause problem so we will do parallel calling 
+  //by calling both getinterview functions it will cause problem so we will do parallel calling
   //this does fast request
 
-  const [userInterviews, LatestInterviews]= await Promise.all([
+  const [userInterviews, LatestInterviews] = await Promise.all([
     getInterviewByUserId(user?.id),
-    getLatestInterviews({userId: user?.id})
+    getLatestInterviews({ userId: user?.id }),
+  ]);
 
-
-  ])
-  
   const haspastInterviews = userInterviews?.length > 0;
   const hasUpcomingInterviews = LatestInterviews?.length > 0;
+
+  const maxCardsToShow = 4; // Adjust how many cards you want in 1 row
+
   return (
     <div className="dark flex flex-col items-center w-screen">
       <section className="">
@@ -63,7 +66,7 @@ if (!user) {
               href="/Create-interview"
               className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
             >
-              Speak to Sales
+              Create new Interview
             </a>
           </div>
           <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
@@ -72,29 +75,43 @@ if (!user) {
         </div>
       </section>
       <div className="w-full flex justify-center">
-        <div className="p-2 w-3/4 flex flex-col gap-4">
-        <h3>Your Interviews</h3>
-        <div className="flex gap-4 w-full flex-wrap justify-center">
-
-          {haspastInterviews ? (
-            userInterviews?.map((interviews) => (
-              <Cards {...interviews} key={interviews.id} />
-            ))
-          ) : (
-            <p>You haven&apos; taken any Interview</p>
-          )}
+        <div className="p-2 px-4 w-full lg:w-3/4 flex flex-col gap-4">
+          <div className="flex justify-between items-center">
+            <h3>Your Interviews</h3>
+            {haspastInterviews && (
+              <Link href="/all-interviews">
+                <Button className="btn-primary">
+                  View all <ArrowRight />
+                </Button>
+              </Link>
+            )}
+          </div>
+          <div className="flex gap-4 w-full flex-wrap justify-center">
+            {haspastInterviews ? (
+              userInterviews
+                .slice(0, maxCardsToShow)
+                .map((interview) => (
+                  <Cards
+                    {...interview}
+                    interviewId={interview.id}
+                    key={interview.id}
+                  />
+                ))
+            ) : (
+              <p>You haven't taken any Interview</p>
+            )}
+          </div>
+          <h3>Other Interviews</h3>
+          <div className="flex gap-4 w-full flex-wrap">
+            {hasUpcomingInterviews ? (
+              LatestInterviews?.map((interviews) => (
+                <Cards {...interviews} key={interviews.id} />
+              ))
+            ) : (
+              <p>There are no new Interview available</p>
+            )}
+          </div>
         </div>
-        <h3>Other Interviews</h3>
-        <div className="flex gap-4 w-full flex-wrap">
-          {hasUpcomingInterviews ? (
-            LatestInterviews?.map((interviews) => (
-              <Cards {...interviews} key={interviews.id} />
-            ))
-          ) : (
-            <p>There are no new Interview available</p>
-          )}
-        </div>
-      </div>
       </div>
     </div>
   );

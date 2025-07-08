@@ -56,8 +56,8 @@ const InterviewLink = ({interviewId, formdata}) => {
       <Link href={'/'}>
           <Button><ArrowLeft/>Back to dashboard</Button>
       </Link>
-      <Link href={'/Create-interview'}>
-        <Button><ArrowRight/>Create new Interview</Button>
+      <Link href={'/interview/'+interviewId}>
+        <Button><ArrowRight/>Take Interview</Button>
       </Link>
       </div>
     </div>

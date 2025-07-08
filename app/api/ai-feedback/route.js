@@ -4,7 +4,7 @@ import { db } from "@/firebase/admin";
 
 
 export async function POST(req) {
-  const { conversation, username, useremail, interview_id } = await req.json();
+  const { conversation, username, useremail, interview_id, userId } = await req.json();
 
   const PROMPT = `${JSON.stringify(conversation)}
 
@@ -43,6 +43,20 @@ Respond in the following JSON format:
     // Clean and parse AI output
     const cleaned = feedback.replace(/```json|```/g, "").trim();
     const finalFeedback = JSON.parse(cleaned);
+
+    // Create document
+    const feedbacks = {
+      created_on: new Date(),
+      feedback : finalFeedback,
+      username: username,
+      useremail: useremail,
+      userId: userId,
+      interview_id: interview_id,
+      finalized: true,
+    };
+
+    // Add to Firestore and get ID
+    const docRef = await db.collection("interviewFeedback").add(feedbacks);
 
 
     return Response.json(
