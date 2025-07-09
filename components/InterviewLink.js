@@ -23,7 +23,10 @@ const InterviewLink = ({interviewId, formdata}) => {
         <h3>Your AI Interview is ready!!</h3>
         <p>share this link with your candidates to start interview process</p>
       </div>
-      <div className="mt-6 w-full lg:w-3/4 bg-slate-800 p-2 border rounded-lg">
+      <div className='mt-10'>
+        <h3>You will see your interviews at the home page</h3>
+      </div>
+      {/* <div className="mt-6 w-full lg:w-3/4 bg-slate-800 p-2 border rounded-lg">
         <div className="flex justify-between ">
           <h4 className='font-bold text-blue-400'>Interview Link</h4>
           <h4 className='font-bold text-blue-400'>Valid for 30 days</h4>
@@ -40,9 +43,9 @@ const InterviewLink = ({interviewId, formdata}) => {
 
         </div>
 
-      </div>
+      </div> */}
 
-      <div className="mt-6 w-full lg:w-3/4 bg-slate-800 p-2 border rounded-lg">
+      {/* <div className="mt-6 w-full lg:w-3/4 bg-slate-800 p-2 border rounded-lg">
         <h4 className='font-bold text-blue-400'>share via</h4>
         <div className='flex gap-4'>
         <Button variant={'outline'}><Mail/> Email</Button>
@@ -51,7 +54,7 @@ const InterviewLink = ({interviewId, formdata}) => {
 
         </div>
       
-      </div>
+      </div> */}
       <div className='mt-6 w-full lg:w-3/4 flex justify-between'>
       <Link href={'/'}>
           <Button><ArrowLeft/>Back to dashboard</Button>
