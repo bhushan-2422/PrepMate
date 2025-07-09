@@ -107,7 +107,7 @@ const page = async () => {
               LatestInterviews
               .slice(0, maxCardsToShow)
               .map((interviews) => (
-                <Cards {...interviews} interviewId={interviews.id} key={interviews.id} />
+                <Cards {...interviews} latest={true} interviewId={interviews.id} key={interviews.id} />
               ))
             ) : (
               <p>There are no new Interview available</p>

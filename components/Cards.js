@@ -21,7 +21,7 @@ const Cards = async ({
   userId,
   role,
   type,
-  techstack,
+  latest = false,
   created_on,
   duration,
 }) => {
@@ -75,22 +75,22 @@ const Cards = async ({
             <span>{duration}</span>
           </div>
           <p className="mt-2 text-sm line-clamp-2">
-            {feedback
+            {(feedback && latest==false)
               ? finalassesment
               : "You haven't taken this interview yet! Take it now to improve your confidence."}
           </p>
 
           <div className="tech-icons flex justify-between mt-4">
             {/* <DisplayTechIcons techstack={techstack}/> */}
-            <Button className={feedback? 'btn-primary':'btn-secondary'}>
+            <Button className={(feedback && latest==false)? 'btn-primary':'btn-secondary'}>
               <Link
                 href={
-                  feedback
+                  (feedback && latest==false)
                     ? `/interview/${interviewId}/feedback`
                     : `/interview/${interviewId}`
                 }
               >
-                {feedback ? "check feedback" : "Give an interview"}
+                {(feedback && latest==false) ? "check feedback" : "Give an interview"}
               </Link>
             </Button>
           </div>
