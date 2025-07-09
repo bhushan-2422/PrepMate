@@ -55,7 +55,7 @@ const page = async () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
             {hasUpcomingInterviews ? (
               LatestInterviews?.map((interviews) => (
-                <Cards {...interviews} key={interviews.id} />
+                <Cards {...interviews}  interviewId={interviews.id} key={interviews.id} />
               ))
             ) : (
               <p className="col-span-full text-center">

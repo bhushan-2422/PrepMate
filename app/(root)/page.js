@@ -104,8 +104,10 @@ const page = async () => {
           <h3>Other Interviews</h3>
           <div className="flex gap-4 w-full flex-wrap">
             {hasUpcomingInterviews ? (
-              LatestInterviews?.map((interviews) => (
-                <Cards {...interviews} key={interviews.id} />
+              LatestInterviews
+              .slice(0, maxCardsToShow)
+              .map((interviews) => (
+                <Cards {...interviews} interviewId={interviews.id} key={interviews.id} />
               ))
             ) : (
               <p>There are no new Interview available</p>
