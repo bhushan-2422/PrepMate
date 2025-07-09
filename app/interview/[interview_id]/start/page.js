@@ -179,7 +179,7 @@ Key Guidelines:
     });
 
     console.log("result:", result.data.feedbackData);
-    router.replace("/interview/" + interview_id + "/completed");
+    router.replace("/interview/" + interview_id + "/feedback");
   };
 
   return (
