@@ -46,7 +46,7 @@ const Cards = async ({
   const finalassesment = feedback?.feedback?.feedback?.summary;
 
   return (
-    <div className="card-border w-full lg:w-[260px]">
+    <div className="card-border w-full lg:w-[260px] transition-transform duration-300 hover:scale-105 m-3 lg:m-0">
       <div className="card-interview p-3">
         <div className="flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg bg-green-900">

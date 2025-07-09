@@ -14,7 +14,8 @@ const rootLayout =async ({ children }) => {
   return (
     <>
     <Navbar/>
-    <div className=" w-screen flex flex-col my-4 h-max">
+    <div className="w-full max-w-screen overflow-x-hidden flex flex-col my-4 h-max">
+
       
       {children}
     </div>
