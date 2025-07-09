@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from '@/lib/actions/auth.action';
-import NavLinks from './Navlinks';
+import SignOutButton from './SignOutButton';
 
 const Navbar =async () => {
   const user =await getCurrentUser();
@@ -22,7 +22,11 @@ const Navbar =async () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex gap-8 font-bold text-[18px]">
-            <NavLinks/>
+            <Link href="/" className="hover:text-violet-500">Home</Link>
+            <Link href="/all-interviews" className="hover:text-violet-500">All Interviews</Link>
+            <Link href="/services/about" className="hover:text-violet-500">About</Link>
+            <Link href="/services/give-feedback" className="hover:text-violet-500">Feedback</Link>
+            <SignOutButton/>
           </div>
 
           {/* Welcome (desktop only) */}
@@ -46,6 +50,7 @@ const Navbar =async () => {
                 <Link href="/all-interviews" className="block hover:text-violet-500">All Interviews</Link>
                 <Link href="/services/about" className="block hover:text-violet-500">About</Link>
                 <Link href="/services/give-feedback" className="block hover:text-violet-500">Feedback</Link>
+                <SignOutButton/>
                 <hr />
                 <h4 className="text-sm font-bold ">
                   Welcome, <span className="text-green-500">{user.name}</span>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const NavLinks = () => {
+const NavLinks = ({active}) => {
   const pathname = usePathname();
 
   const linkClasses = (href) =>
@@ -28,6 +28,7 @@ const NavLinks = () => {
       >
         Feedback
       </Link>
+      {active && <Button className='btn-primary block'>SignOut</Button>}
     </nav>
   );
 };
